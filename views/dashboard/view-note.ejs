@@ -1,0 +1,58 @@
+<div class="container-fluid container-fluid-custom pb-5 mb-5">
+  <div class="row mb-4">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item active"><%= note.title %></li>
+        </ol>
+      </nav>
+
+      <div class="col d-flex justify-content-between align-items-center">
+        <h1 class="h2">View Notes</h1>
+        <!-- Button trigger modal -->
+        <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <form action="/dashboard/item/<%= noteId %>?_method=PUT" method="POST" class="position-relative">
+    <div class="form-group mb-4 positon-absolute" style="left: -1px; top: 1px; right: 1px;">
+      <input type="text" class="form-control fw-bold border-0 fs-4" id="title" name="title" value="<%= note.title %>" placeholder="Title">
+    </div>
+
+    <div class="form-group mb-4">
+      <textarea name="body" id="body" rows="12" class="form-control pt-3 fs-4" placeholer="Take a note..."><%= note.body %></textarea>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary btn-lg">Update</button>
+    </div>
+  </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Delete Note</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="lh-lg">You'll delete your note:
+          <b class="fw-bold">
+            <%= note.title %>
+          </b><br />
+          Are you sure about this?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Keep It</button>
+        <form action="/dashboard/item-delete/<%= noteId %>?_method=DELETE" method="POST">
+          <button type="submit" class="btn btn-danger">Yes, Delete!</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

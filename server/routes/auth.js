@@ -9,7 +9,7 @@ passport.use(new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALLBACK_URL
 },
-  async function (accessToken, refreshToken, profile, done)
+  async function (accessToken, refreshToken, profile, callback)
   {
     const newUser = {
       googleId: profile.id,
@@ -23,10 +23,10 @@ passport.use(new GoogleStrategy({
       let user = await User.findOne({googleId: profile.id});
 
       if (user) {
-        done(null, user);
+        callback(null, user);
       } else {
         user = await User.create(newUser);
-        done(null, user);
+        callback(null, user);
       }
 
     } catch (err) {
@@ -49,7 +49,7 @@ router.get('/google/callback',
 
 // Route if something goes wrong
 router.get('/login-failure', (req, res) => {
-  res.send('something went wrong...');
+  res.send('Authentication went wrong...');
 });
 
 // Destroy session
@@ -65,14 +65,14 @@ router.get('/logout', (req, res) => {
 });
 
 // Persist user data after sucessful auth
-passport.serializeUser((user, done) => {
-  done(null, user.id);
+passport.serializeUser((user, callback) => {
+  callback(null, user.id);
 });
 
 // Retrieve user data from session
-passport.deserializeUser((id, done) => {
+passport.deserializeUser((id, callback) => {
   User.findById(id)
-  .then((user) => done(null, user))
+  .then((user) => callback(null, user))
   .catch((err) => console.log(err));
 });
 
